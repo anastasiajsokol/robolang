@@ -16,6 +16,8 @@ public class BlueAndGold extends SyncAutoOp2023 {
 
         try {
             {{code}}
+            
+            sync();
         } catch(SyncError e) {
             telemetry_.addData("Path", e.getMessage());
             telemetry_.update();
