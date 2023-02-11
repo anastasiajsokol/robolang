@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>RoboLang</title>
+
+        <link rel="icon" href="robot.ico"/>
+        
+        <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P">
+
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+            }
+
+            #workspace {
+                position: fixed;
+                top: 0vh;
+                left: 0;
+
+                width: 100vw;
+                height: 100vh;
+            }
+
+            .gradient_background {
+                background: linear-gradient(120deg, #FF9A56, #D162A4) !important;
+            }
+
+            .blocklyTrash {
+                filter: brightness(0);
+            }
+
+            .codebox_background {
+                background: linear-gradient(120deg, #40c9ff, #e81cff);
+                font-family: 'Press Start 2P', Garamond !important;
+            }
+
+            .codebox {
+                position: fixed;
+                top: 50vh;
+                left: 50vw;
+                transform: translate(-50%, -50%);
+
+                width: 80vw;
+                height: 80vh;
+
+                z-index: 7558;
+
+                border:1px solid black;
+                overflow: auto;    
+                padding: 13px;
+                border-radius: 20px;
+
+                font-family: Arial, Helvetica, sans-serif;
+
+                display: none;
+
+                background-color: #ccc;
+            }
+
+            .codebox .close {
+                font-style: normal; 
+                float: right;
+                margin-right: 10px;
+                font-size: 2rem;
+                font-weight: bolder;
+                
+                user-select: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="workspace"></div>
+        
+        <div class="codebox codebox_background" id="codebox">
+            <i class="close" id="close">x</i>
+            <div class="code" id="code">
+                No Code Currently
+            </div>
+        </div>
+
+        <script src="app.js"></script>
+
+        <script>
+            window.addEventListener("load", () => {
+                const codebox = document.getElementById("codebox");
+                const codediv = document.getElementById("code");
+
+                codebox.fancy = true;
+                
+                document.getElementById("close").addEventListener("click", () => {
+                    codebox.style.display = "none";
+                });
+
+                window.display_code = (code) => {
+                    if(navigator.clipboard){
+                        navigator.clipboard.writeText(code);
+                    }
+
+                    codediv.innerHTML = code.replaceAll("\n", "<br>").replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+                    codebox.style.display = "block";
+                }
+
+                for(let element of document.getElementsByClassName("blocklySvg")){
+                    element.classList.add("gradient_background");
+                    element.fancy = true;
+                }
+
+                document.addEventListener("keydown", (key) => {
+                    if(key.key == "B"){
+                        for(let element of document.getElementsByClassName("blocklySvg")){
+                            if(element.fancy){
+                                element.classList.remove("gradient_background");
+                            } else {
+                                element.classList.add("gradient_background");
+                            }
+                            element.fancy = !element.fancy;
+                        }
+
+                        if(codebox.fancy){
+                            codebox.classList.remove("codebox_background");
+                        } else {
+                            codebox.classList.add("codebox_background");
+                        }
+
+                        codebox.fancy = !codebox.fancy;
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
